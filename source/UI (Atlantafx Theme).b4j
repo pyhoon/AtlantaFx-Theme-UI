@@ -1,0 +1,123 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+File1=Layout1.bjl
+File2=Layout2.bjl
+File3=primer-dark.css
+File4=primer-light.css
+FileGroup1=Default Group
+FileGroup2=Default Group
+FileGroup3=Default Group
+FileGroup4=Default Group
+Group=Default Group
+Library1=javaobject
+Library2=jcore
+Library3=jfx
+Library4=jxui
+Library5=cssutils
+Module1=Secondary
+NumberOfFiles=4
+NumberOfLibraries=5
+NumberOfModules=1
+Version=10.5
+@EndOfDesignText@
+#Region Project Attributes 
+	#MainFormWidth: 1280
+	#MainFormHeight: 660 
+#End Region
+
+Sub Process_Globals
+	Private fx As JFX
+	Public MainForm As Form
+	Private SecondaryForm As Secondary
+	
+	Private ComboBox1 As ComboBox
+	Private ListView1 As ListView
+	Private TableView1 As TableView
+	Private TreeView1 As TreeView
+	Private Slider1 As Slider
+	Private Spinner1 As Spinner
+	Private ChoiceBox1 As ChoiceBox
+	Private ProgressBar1 As ProgressBar
+	Private ProgressIndicator1 As ProgressIndicator	
+	Private ox, oy As Double
+End Sub
+
+' <link>link|https://www.b4x.com/android/forum/threads/form-with-rounded-corners-is-it-possible.94579/#post-598327</link> Form with rounded corners
+' <link>link|https://www.b4x.com/android/forum/threads/resize-form-with-rounded-corners.148969/</link> Resize form with rounded corners
+' <link>link|https://www.b4x.com/android/forum/threads/javafx-metro-style-css.114932/</link> [JavaFX] - Metro Style CSS
+' <link>link|https://github.com/mkpaz/atlantafx</link> AtlantaFX
+Sub AppStart (Form1 As Form, Args() As String)
+	MainForm = Form1
+	MainForm.SetFormStyle("TRANSPARENT")
+	MainForm.RootPane.LoadLayout("Layout1")
+	MainForm.Show
+	MainForm.BackColor = fx.Colors.ARGB(0, 255, 0, 0)
+	CSSUtils.SetBackgroundColor(MainForm.RootPane, fx.Colors.Transparent)
+	MainForm.Stylesheets.Add(File.GetUri(File.DirAssets, "primer-light.css"))
+	
+	SecondaryForm.Initialize
+	
+	Dim TL As List = Array(Array(1 , 2, 3), Array(4, 5, 6), Array(7, 8, 9))
+	TableView1.SetColumns(Array As String("Column 01", "Column 02", "Column 03"))
+	TableView1.Items = TL
+	For i = 0 To 10
+		ListView1.Items.Add("Item #" & (i+1))
+		ComboBox1.Items.Add("Item #" & (i+1))
+		Spinner1.SetListItems(Array ("Item #1", "Item #2"))
+		ChoiceBox1.Items.Add("Item #" & (i+1))
+		Dim tti As TreeItem
+		tti.Initialize("tt", "Item #" & (i+1))
+		TreeView1.Root.Children.Add(tti)
+	Next
+	ProgressBar1.Progress = Slider1.Value/100
+	ProgressIndicator1.Progress = Slider1.Value/100
+End Sub
+
+Sub MainForm_MousePressed (EventData As MouseEvent)
+	ox = EventData.X
+	oy = EventData.Y
+End Sub
+
+Sub MainForm_MouseDragged (EventData As MouseEvent)
+	Dim jo As JavaObject = EventData
+	MainForm.WindowLeft = jo.RunMethod("getScreenX", Null) - ox
+	MainForm.WindowTop = jo.RunMethod("getScreenY", Null) - oy
+End Sub
+
+'Return true to allow the default exceptions handler to handle the uncaught exception.
+Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
+	Return True
+End Sub
+
+Sub Slider1_ValueChange (Value As Double)
+	ProgressBar1.Progress = Value/100
+	ProgressIndicator1.Progress = Value/100
+	'Log("Value :" & Value)
+End Sub
+
+Sub Button1_Click
+	SecondaryForm.Show
+	MainForm.Close
+End Sub
+
+Public Sub Show
+	MainForm.Show
+End Sub
+
+Private Sub BtnLight_Click
+	MainForm.Stylesheets.Clear
+	MainForm.Stylesheets.Add(File.GetUri(File.DirAssets, "primer-light.css"))
+End Sub
+
+Private Sub BtnDark_Click
+	MainForm.Stylesheets.Clear
+	MainForm.Stylesheets.Add(File.GetUri(File.DirAssets, "primer-dark.css"))
+End Sub
+
+Private Sub BtnDefault_Click
+	MainForm.Stylesheets.Clear
+End Sub
+
+Private Sub BtnClose_Click
+	MainForm.Close
+End Sub
