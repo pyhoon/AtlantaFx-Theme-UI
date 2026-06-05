@@ -1,2 +1,2 @@
-# UI (Atlantafx Theme)
-B4J UI (Atlantafx Theme)
+# AtlantaFx Theme UI
+AtlantaFx Theme UI template for B4J
